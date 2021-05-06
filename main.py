@@ -20,4 +20,4 @@ returns:
 """
 
 # get historical market data, here max is 5 years.
-msft.history(period="max")
+df = adbe.history(period="3mo")
