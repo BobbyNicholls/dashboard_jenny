@@ -1,2 +1,2 @@
 # dashboard_jenny
-Generates a dash for comparing asset values
+Generates a plot for comparing asset values, needs to take as input a set of ticker symbols
