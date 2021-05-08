@@ -110,6 +110,60 @@ ax1.xlabel("Close to high ratio")
 ax1.ylabel("Quarterly earnings growth")
 ax1.plot()
 
+###
+### Plot side by side
+###
+#plt.figure(2)
+fig2, (ax2, ax3) = plt.subplots(nrows=1, ncols=2)
+x = np.array(financials_df["profitMargins"])
+y = np.array(financials_df[target])
+ax2.scatter(x, y)
+label_point(financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax2)
+m, b = np.polyfit(x, y, 1)
+ax2.plot(x, m*x + b)
+ax2.set_xlabel("Profit Margin")
+ax2.set_ylabel("Market cap / revenue")
+ax2.plot()
+
+x = np.array(context_df["close_to_high_ratio"])
+y = np.array(financials_df["earningsQuarterlyGrowth"])
+ax3.scatter(x, y)
+label_point(context_df["close_to_high_ratio"], financials_df["earningsQuarterlyGrowth"], context_df["symbol"], ax3)
+ax3.set_xlabel("Close to high ratio")
+ax3.set_ylabel("Quarterly earnings growth")
+ax3.plot()
+
+
+###
+### Plot with table
+###
+
+fig3, (ax4, ax5, ax6) = plt.subplots(nrows=3, ncols=1)
+fig3.set_size_inches(18.5, 10.5)
+x = np.array(financials_df["profitMargins"])
+y = np.array(financials_df[target])
+ax4.scatter(x, y)
+label_point(financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax4)
+m, b = np.polyfit(x, y, 1)
+ax4.plot(x, m*x + b)
+ax4.set_xlabel("Profit Margin")
+ax4.set_ylabel("Market cap / revenue")
+ax4.plot()
+
+x = np.array(context_df["close_to_high_ratio"])
+y = np.array(financials_df["earningsQuarterlyGrowth"])
+ax5.scatter(x, y)
+label_point(context_df["close_to_high_ratio"], financials_df["earningsQuarterlyGrowth"], context_df["symbol"], ax5)
+ax5.set_xlabel("Close to high ratio")
+ax5.set_ylabel("Quarterly earnings growth")
+ax5.plot()
+
+ax6.axis('off')
+ax6.axis('tight')
+ax6.table(cellText=financials_df.values, colLabels=financials_df.columns, loc='center')
+fig3.tight_layout()
+ax6.plot()
+
 # to check keys
 for inf in asset_infos:
     print(target in inf.keys())
