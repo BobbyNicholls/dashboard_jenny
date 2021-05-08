@@ -3,22 +3,20 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+def label_point(x, y, val, ax):
+    a = pd.concat({'x': x, 'y': y, 'val': val}, axis=1)
+    for i, point in a.iterrows():
+        ax.text(point['x'], point['y'], str(point['val']))
+
+
+def unpack_data(asset_info, vals_to_unpack):
+    return [asset_info[val] for val in vals_to_unpack]
+
+
 tickers = ["ADBE", "MSFT", "FB", "NFLX", "AAPL", "AMZN", "GOOG", "TTD", "GME", "TSLA", "PINS", "TWTR"]
 #tickers = ["APPS", "AVV.L"]
 asset_infos = [yf.Ticker(ticker).info for ticker in tickers]
-
-"""
-returns:
-{
- 'quoteType': 'EQUITY',
- 'quoteSourceName': 'Nasdaq Real Time Price',
- 'currency': 'USD',
- 'shortName': 'Microsoft Corporation',
- 'exchangeTimezoneName': 'America/New_York',
-  ...
- 'symbol': 'MSFT'
-}
-"""
 
 """
 Wikipedia on "enterpriseToRevenue":
@@ -58,11 +56,6 @@ industry = "industry"
 # get historical market data, here max is 5 years.
 # df = adbe.history(period="3mo")
 
-
-def unpack_data(asset_info, vals_to_unpack):
-    return [asset_info[val] for val in vals_to_unpack]
-
-
 cols = financial_fundamentals
 
 financials_df = pd.DataFrame(
@@ -90,24 +83,34 @@ financials_df = financials_df.drop(['marketCap'], axis=1)
 
 target = 'market_cap_over_revenue'
 
+###
+### Make the valuation scatter plot
+###
+plt.figure(0)
 ax = financials_df.set_index('profitMargins')[target].plot(style='o')
-
-def label_point(x, y, val, ax):
-    a = pd.concat({'x': x, 'y': y, 'val': val}, axis=1)
-    for i, point in a.iterrows():
-        ax.text(point['x'], point['y'], str(point['val']))
-
 label_point(financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax)
 x = np.array(financials_df["profitMargins"])
 y = np.array(financials_df[target])
 m, b = np.polyfit(x, y, 1)
-plt.plot(x, m*x + b)
-plt.xlabel("Profit Margin")
-plt.ylabel("Market cap / revenue")
-plt.draw()
+ax.plot(x, m*x + b)
+ax.set_xlabel("Profit Margin")
+ax.set_ylabel("Market cap / revenue")
+ax.plot()
 
+###
+### Make the context scatter plot
+###
+plt.figure(1)
+ax1 = context_df.set_index("close_to_high_ratio")["earningsQuarterlyGrowth"].plot(style='o')
+label_point(context_df["close_to_high_ratio"], financials_df["earningsQuarterlyGrowth"], context_df["symbol"], ax1)
+# x = np.array(context_df["close_to_high_ratio"])
+# y = np.array(financials_df["earningsQuarterlyGrowth"])
+# plt.scatter(x, y)
+ax1.xlabel("Close to high ratio")
+ax1.ylabel("Quarterly earnings growth")
+ax1.plot()
 
-
+# to check keys
 for inf in asset_infos:
     print(target in inf.keys())
 
