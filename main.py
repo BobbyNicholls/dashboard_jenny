@@ -76,7 +76,7 @@ light_scaled_variances = lsmcv - portfolio_variances
 light_scaled_weighting = light_scaled_variances/light_scaled_variances.sum()
 light_scaled_allocation = light_scaled_weighting * 100_000
 print(f"with a Light Scalar of {LIGHT_SCALAR} this is your distribution:")
-print(light_scaled_allocation)
+print(light_scaled_allocation.astype(int))
 
 """
 Wikipedia on "enterpriseToRevenue":
