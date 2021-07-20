@@ -1,22 +1,82 @@
-import pandas as pd
-import yfinance as yf
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import pandas_datareader.data as web
+import yfinance as yf
 
 
 def label_point(x, y, val, ax):
-    a = pd.concat({'x': x, 'y': y, 'val': val}, axis=1)
+    a = pd.concat({"x": x, "y": y, "val": val}, axis=1)
     for i, point in a.iterrows():
-        ax.text(point['x'], point['y'], str(point['val']))
+        ax.text(point["x"], point["y"], str(point["val"]))
 
 
 def unpack_data(asset_info, vals_to_unpack):
     return [asset_info[val] for val in vals_to_unpack]
 
 
-tickers = ["ADBE", "MSFT", "FB", "NFLX", "AAPL", "AMZN", "GOOG", "TTD", "GME", "TSLA", "PINS", "TWTR"]
-#tickers = ["APPS", "AVV.L"]
+def get_cv(ticker, month_offset=24):
+    df = web.DataReader(
+        ticker,
+        "yahoo",
+        (pd.to_datetime("now") - pd.DateOffset(months=month_offset)).date(),
+        pd.to_datetime("now").date(),
+    )
+    return (df["Close"].std() / df["Close"].mean()) * 100
+
+
+tickers = [
+    "PYPL",
+    "ADBE",
+    "MSFT",
+    "FB",
+    "NFLX",
+    "AAPL",
+    "AMZN",
+    "GOOG",
+    "AMD",
+    "NVDA",
+    "INTC",
+    "LOGI",
+    "CRM",
+    "CRSR",
+]
+tickers = ["ADM.L", "AVV.L", "LLOY.L", "SAE.L", "AZN.L", "GAW.L", "DPW.DE"]
+# tickers = ["ADM.L", "LLOY.L", "BARC.L", "NWG.L", "AZN.L", "AV..LSE"]
 asset_infos = [yf.Ticker(ticker).info for ticker in tickers]
+asset_variances = pd.Series(data=[get_cv(ticker) for ticker in tickers], index=tickers)
+
+portfolio_tickers = [
+    "BABA",
+    "ASTS",
+    "JKS",
+    "CRSR",
+#    "INRG.L",
+    "FLGT",
+    "ADBE",
+    "MSFT",
+    "FB",
+    "GOOG",
+]
+portfolio_variances = pd.Series(
+    data=[get_cv(ticker) for ticker in portfolio_tickers], index=portfolio_tickers
+).sort_values(ascending=False)
+
+LIGHT_SCALAR = 1.1
+for LIGHT_SCALAR in range(10):
+    lsmcv = LIGHT_SCALAR*portfolio_variances.max()
+    light_scaled_variances = lsmcv - portfolio_variances
+    light_scaled_weighting = light_scaled_variances/light_scaled_variances.sum()
+    light_scaled_allocation = light_scaled_weighting * 100_000
+    print(f"with a Light Scalar of {LIGHT_SCALAR} this is your distribution:")
+    print(light_scaled_allocation)
+
+lsmcv = LIGHT_SCALAR*portfolio_variances.max()
+light_scaled_variances = lsmcv - portfolio_variances
+light_scaled_weighting = light_scaled_variances/light_scaled_variances.sum()
+light_scaled_allocation = light_scaled_weighting * 100_000
+print(f"with a Light Scalar of {LIGHT_SCALAR} this is your distribution:")
+print(light_scaled_allocation)
 
 """
 Wikipedia on "enterpriseToRevenue":
@@ -33,7 +93,7 @@ common stockholders, who are the ultimate owners, a company reported during the 
 # values we want:
 financial_fundamentals = [
     "forwardPE",
-    "trailingPE",
+    # "trailingPE",
     "marketCap",
     "enterpriseToRevenue",
     "profitMargins",
@@ -70,66 +130,52 @@ context_df = pd.DataFrame(
     data=[unpack_data(x, cols) for x in asset_infos],
 )
 
-context_df['close_to_high_ratio'] = context_df['previousClose'] / context_df['fiftyTwoWeekHigh']
-context_df['symbol'] = tickers
+context_df["headroom"] = 1 / (
+    context_df["previousClose"] / context_df["fiftyTwoWeekHigh"]
+)
+context_df["symbol"] = tickers
 context_df = context_df[["symbol"] + list(context_df.columns[:-1])]
 
-financials_df['symbol'] = tickers
+financials_df["symbol"] = tickers
 financials_df = financials_df[["symbol"] + list(financials_df.columns[:-1])]
-financials_df['revenue_bn'] = financials_df['netIncomeToCommon']/financials_df['profitMargins']/1000000000
-financials_df['market_cap_bn'] = financials_df['marketCap']/1000000000
-financials_df['market_cap_over_revenue'] = financials_df['market_cap_bn'] / financials_df['revenue_bn']
-financials_df = financials_df.drop(['marketCap'], axis=1)
+financials_df["revenue_bn"] = (
+    financials_df["netIncomeToCommon"] / financials_df["profitMargins"] / 1000000000
+)
+financials_df["market_cap_bn"] = financials_df["marketCap"] / 1000000000
+financials_df["market_cap_over_revenue"] = (
+    financials_df["market_cap_bn"] / financials_df["revenue_bn"]
+)
+financials_df = financials_df.drop(["marketCap"], axis=1)
 
-target = 'market_cap_over_revenue'
-
-###
-### Make the valuation scatter plot
-###
-plt.figure(0)
-ax = financials_df.set_index('profitMargins')[target].plot(style='o')
-label_point(financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax)
-x = np.array(financials_df["profitMargins"])
-y = np.array(financials_df[target])
-m, b = np.polyfit(x, y, 1)
-ax.plot(x, m*x + b)
-ax.set_xlabel("Profit Margin")
-ax.set_ylabel("Market cap / revenue")
-ax.plot()
-
-###
-### Make the context scatter plot
-###
-plt.figure(1)
-ax1 = context_df.set_index("close_to_high_ratio")["earningsQuarterlyGrowth"].plot(style='o')
-label_point(context_df["close_to_high_ratio"], financials_df["earningsQuarterlyGrowth"], context_df["symbol"], ax1)
-# x = np.array(context_df["close_to_high_ratio"])
-# y = np.array(financials_df["earningsQuarterlyGrowth"])
-# plt.scatter(x, y)
-ax1.xlabel("Close to high ratio")
-ax1.ylabel("Quarterly earnings growth")
-ax1.plot()
+target = "market_cap_over_revenue"
 
 ###
 ### Plot side by side
 ###
-#plt.figure(2)
+
 fig2, (ax2, ax3) = plt.subplots(nrows=1, ncols=2)
 x = np.array(financials_df["profitMargins"])
 y = np.array(financials_df[target])
 ax2.scatter(x, y)
-label_point(financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax2)
+label_point(
+    financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax2
+)
 m, b = np.polyfit(x, y, 1)
-ax2.plot(x, m*x + b)
+ax2.plot(x, m * x + b)
 ax2.set_xlabel("Profit Margin")
 ax2.set_ylabel("Market cap / revenue")
 ax2.plot()
 
-x = np.array(context_df["close_to_high_ratio"])
+x = np.array(context_df["headroom"])
 y = np.array(financials_df["earningsQuarterlyGrowth"])
 ax3.scatter(x, y)
-label_point(context_df["close_to_high_ratio"], financials_df["earningsQuarterlyGrowth"], context_df["symbol"], ax3)
-ax3.set_xlabel("Close to high ratio")
+label_point(
+    context_df["headroom"],
+    financials_df["earningsQuarterlyGrowth"],
+    context_df["symbol"],
+    ax3,
+)
+ax3.set_xlabel("Headroom percent to 52 week high")
 ax3.set_ylabel("Quarterly earnings growth")
 ax3.plot()
 
@@ -143,28 +189,34 @@ fig3.set_size_inches(18.5, 10.5)
 x = np.array(financials_df["profitMargins"])
 y = np.array(financials_df[target])
 ax4.scatter(x, y)
-label_point(financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax4)
+label_point(
+    financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax4
+)
 m, b = np.polyfit(x, y, 1)
-ax4.plot(x, m*x + b)
+ax4.plot(x, m * x + b)
 ax4.set_xlabel("Profit Margin")
 ax4.set_ylabel("Market cap / revenue")
 ax4.plot()
 
-x = np.array(context_df["close_to_high_ratio"])
+x = np.array(context_df["headroom"])
 y = np.array(financials_df["earningsQuarterlyGrowth"])
 ax5.scatter(x, y)
-label_point(context_df["close_to_high_ratio"], financials_df["earningsQuarterlyGrowth"], context_df["symbol"], ax5)
+label_point(
+    context_df["headroom"],
+    financials_df["earningsQuarterlyGrowth"],
+    context_df["symbol"],
+    ax5,
+)
 ax5.set_xlabel("Close to high ratio")
 ax5.set_ylabel("Quarterly earnings growth")
 ax5.plot()
 
-ax6.axis('off')
-ax6.axis('tight')
-ax6.table(cellText=financials_df.values, colLabels=financials_df.columns, loc='center')
+ax6.axis("off")
+ax6.axis("tight")
+ax6.table(cellText=financials_df.values, colLabels=financials_df.columns, loc="center")
 fig3.tight_layout()
 ax6.plot()
 
 # to check keys
 for inf in asset_infos:
     print(target in inf.keys())
-
