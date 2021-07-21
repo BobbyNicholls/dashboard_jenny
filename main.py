@@ -39,44 +39,43 @@ tickers = [
     "INTC",
     "LOGI",
     "CRM",
-    "CRSR",
+    # "CRSR",
 ]
-tickers = ["ADM.L", "AVV.L", "LLOY.L", "SAE.L", "AZN.L", "GAW.L", "DPW.DE"]
+#tickers = ["ADM.L", "AVV.L", "LLOY.L", "SAE.L", "AZN.L", "GAW.L", "DPW.DE"]
 # tickers = ["ADM.L", "LLOY.L", "BARC.L", "NWG.L", "AZN.L", "AV..LSE"]
 asset_infos = [yf.Ticker(ticker).info for ticker in tickers]
-asset_variances = pd.Series(data=[get_cv(ticker) for ticker in tickers], index=tickers)
-
-portfolio_tickers = [
-    "BABA",
-    "ASTS",
-    "JKS",
-    "CRSR",
-#    "INRG.L",
-    "FLGT",
-    "ADBE",
-    "MSFT",
-    "FB",
-    "GOOG",
-]
-portfolio_variances = pd.Series(
-    data=[get_cv(ticker) for ticker in portfolio_tickers], index=portfolio_tickers
-).sort_values(ascending=False)
-
-LIGHT_SCALAR = 1.1
-for LIGHT_SCALAR in range(10):
-    lsmcv = LIGHT_SCALAR*portfolio_variances.max()
-    light_scaled_variances = lsmcv - portfolio_variances
-    light_scaled_weighting = light_scaled_variances/light_scaled_variances.sum()
-    light_scaled_allocation = light_scaled_weighting * 100_000
-    print(f"with a Light Scalar of {LIGHT_SCALAR} this is your distribution:")
-    print(light_scaled_allocation)
-
-lsmcv = LIGHT_SCALAR*portfolio_variances.max()
-light_scaled_variances = lsmcv - portfolio_variances
-light_scaled_weighting = light_scaled_variances/light_scaled_variances.sum()
-light_scaled_allocation = light_scaled_weighting * 100_000
-print(f"with a Light Scalar of {LIGHT_SCALAR} this is your distribution:")
-print(light_scaled_allocation.astype(int))
+#
+# portfolio_tickers = [
+#     "BABA",
+#     "ASTS",
+#     "JKS",
+#     "CRSR",
+# #    "INRG.L",
+#     "FLGT",
+#     "ADBE",
+#     "MSFT",
+#     "FB",
+#     "GOOG",
+# ]
+# portfolio_variances = pd.Series(
+#     data=[get_cv(ticker) for ticker in portfolio_tickers], index=portfolio_tickers
+# ).sort_values(ascending=False)
+#
+# LIGHT_SCALAR = 1.1
+# for LIGHT_SCALAR in range(10):
+#     lsmcv = LIGHT_SCALAR*portfolio_variances.max()
+#     light_scaled_variances = lsmcv - portfolio_variances
+#     light_scaled_weighting = light_scaled_variances/light_scaled_variances.sum()
+#     light_scaled_allocation = light_scaled_weighting * 100_000
+#     print(f"with a Light Scalar of {LIGHT_SCALAR} this is your distribution:")
+#     print(light_scaled_allocation)
+#
+# lsmcv = LIGHT_SCALAR*portfolio_variances.max()
+# light_scaled_variances = lsmcv - portfolio_variances
+# light_scaled_weighting = light_scaled_variances/light_scaled_variances.sum()
+# light_scaled_allocation = light_scaled_weighting * 100_000
+# print(f"with a Light Scalar of {LIGHT_SCALAR} this is your distribution:")
+# print(light_scaled_allocation.astype(int))
 
 """
 Wikipedia on "enterpriseToRevenue":
