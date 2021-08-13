@@ -26,6 +26,7 @@ def get_cv(ticker, month_offset=24):
 
 
 tickers = [
+    # "U",
     "PYPL",
     "ADBE",
     "MSFT",
@@ -39,9 +40,9 @@ tickers = [
     "INTC",
     "LOGI",
     "CRM",
-    # "CRSR",
+    "CRSR",
 ]
-#tickers = ["ADM.L", "AVV.L", "LLOY.L", "SAE.L", "AZN.L", "GAW.L", "DPW.DE"]
+# tickers = ["ADM.L", "AVV.L", "LLOY.L", "SAE.L", "AZN.L", "GAW.L", "DPW.DE"]
 # tickers = ["ADM.L", "LLOY.L", "BARC.L", "NWG.L", "AZN.L", "AV..LSE"]
 asset_infos = [yf.Ticker(ticker).info for ticker in tickers]
 #
@@ -156,9 +157,7 @@ fig2, (ax2, ax3) = plt.subplots(nrows=1, ncols=2)
 x = np.array(financials_df["profitMargins"])
 y = np.array(financials_df[target])
 ax2.scatter(x, y)
-label_point(
-    financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax2
-)
+label_point(financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax2)
 m, b = np.polyfit(x, y, 1)
 ax2.plot(x, m * x + b)
 ax2.set_xlabel("Profit Margin")

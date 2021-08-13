@@ -4,6 +4,7 @@ import pandas_datareader.data as web
 
 from utils.portfolio_balancing import get_portfolio_variances
 
+
 def get_cv(ticker, month_offset=24):
     df = web.DataReader(
         ticker,
