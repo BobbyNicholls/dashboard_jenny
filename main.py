@@ -155,8 +155,7 @@ fig2, (ax2, ax3) = plt.subplots(nrows=1, ncols=2)
 x = np.array(financials_df["profitMargins"])
 y = np.array(financials_df[target])
 ax2.scatter(x, y)
-label_point(
-    financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax2
+label_point(    financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax2
 )
 m, b = np.polyfit(x, y, 1)
 ax2.plot(x, m * x + b)
