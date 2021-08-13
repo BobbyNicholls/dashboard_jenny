@@ -119,15 +119,13 @@ industry = "industry"
 cols = financial_fundamentals
 
 financials_df = pd.DataFrame(
-    columns=cols,
-    data=[unpack_data(x, cols) for x in asset_infos],
+    columns=cols, data=[unpack_data(x, cols) for x in asset_infos],
 )
 
 cols = ["fiftyTwoWeekHigh", "previousClose", "earningsQuarterlyGrowth"]
 
 context_df = pd.DataFrame(
-    columns=cols,
-    data=[unpack_data(x, cols) for x in asset_infos],
+    columns=cols, data=[unpack_data(x, cols) for x in asset_infos],
 )
 
 context_df["headroom"] = 1 / (
@@ -157,7 +155,9 @@ fig2, (ax2, ax3) = plt.subplots(nrows=1, ncols=2)
 x = np.array(financials_df["profitMargins"])
 y = np.array(financials_df[target])
 ax2.scatter(x, y)
-label_point(financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax2)
+label_point(
+    financials_df["profitMargins"], financials_df[target], financials_df["symbol"], ax2
+)
 m, b = np.polyfit(x, y, 1)
 ax2.plot(x, m * x + b)
 ax2.set_xlabel("Profit Margin")
