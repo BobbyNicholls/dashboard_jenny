@@ -19,7 +19,9 @@ def runner():
     sp500_stocks_df = get_sp500_stocks()
     todays_date = str(pd.to_datetime("today").date())
     for worksheet_name in sp500_stocks_df["GICS Sector"].unique():
-        print("=======================\nReviewing Sector: {}\n=======================\n")
+        print(
+            "=======================\nReviewing Sector: {}\n=======================\n"
+        )
         worksheet = sheet.worksheet(worksheet_name)
         current_df = pd.DataFrame(worksheet.get_all_records())
         tickers = list(
@@ -27,7 +29,9 @@ def runner():
         )
         results_df = scrape(tickers)
         results_df["date"] = todays_date
-        new_df = current_df.append(results_df).drop_duplicates(["ticker", "date"], keep="last")
+        new_df = current_df.append(results_df).drop_duplicates(
+            ["ticker", "date"], keep="last"
+        )
         worksheet.clear()
         worksheet.update([new_df.columns.values.tolist()] + new_df.values.tolist())
 
