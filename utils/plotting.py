@@ -11,6 +11,7 @@ def label_point(x, y, val, ax):
 
 def plot_results(result_df: pd.DataFrame):
     fig, (ax2, ax3) = plt.subplots(nrows=1, ncols=2)
+    fig.set_size_inches(18.5, 7.5)
     x = np.array(result_df["net_profit_margin"])
     y = np.array(result_df["market_cap_over_revenue"])
     ax2.scatter(x, y)

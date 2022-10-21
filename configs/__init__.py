@@ -82,10 +82,14 @@ sp500_biggest_tech_tickers = [
     "CRM",
     "CRSR",
 ]
+ad_hoc_tickers = ["DIS", "NFLX"]
 # sp500_energy_tickers = get_sp500_stocks_by_sector("Energy")
-sp500_health_care_tickers = get_sp500_stocks_by_sector("Health Care")
+# sp500_health_care_tickers = get_sp500_stocks_by_sector("Health Care")
 # sp500_real_estate_tickers = get_sp500_stocks_by_sector("Real Estate")
 # sp500_utilities_tickers = get_sp500_stocks_by_sector("Utilities")
 # sp500_consumer_staples_tickers = get_sp500_stocks_by_sector("Consumer Staples")
 # sp500_communication_tickers = get_sp500_stocks_by_sector("Communication Services")
 # sp500_industrials_tickers = get_sp500_stocks_by_sector("Industrials")
+# sp500_materials_tickers = get_sp500_stocks_by_sector("Materials")
+# sp500_financials_tickers = get_sp500_stocks_by_sector("Financials")
+sp500_IT_tickers = get_sp500_stocks_by_sector("Information Technology")
