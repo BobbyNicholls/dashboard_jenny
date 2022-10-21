@@ -28,7 +28,14 @@ for ticker in tickers:
     for url_format in url_formats:
         try:
             url = url_format.replace("{ticker}", ticker)
-            scrape_data(url, market_caps, headrooms, revenues, net_profit_margins, net_income_yoy_growths)
+            scrape_data(
+                url,
+                market_caps,
+                headrooms,
+                revenues,
+                net_profit_margins,
+                net_income_yoy_growths,
+            )
             break
         except Exception as e:
             exceptions.append(e)

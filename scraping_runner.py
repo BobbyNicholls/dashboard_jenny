@@ -4,14 +4,16 @@ https://support.google.com/docs/answer/3093281?hl=en-GB
 
 """
 
+from typing import List
+
 import pandas as pd
 
-from configs import sp500_health_care_tickers as tickers
+from configs import sp500_IT_tickers as tickers
 from utils.data_scraping import scrape_data
 from utils.performance_evaluation import get_performance_metrics
 from utils.plotting import plot_results, plot_performance_metrics
 
-url_formats = [
+URL_FORMATS = [
     "https://www.google.com/finance/quote/{ticker}:NYSE",
     "https://www.google.com/finance/quote/{ticker}:NASDAQ",
     "https://www.google.com/finance/quote/{ticker}:BATS",
@@ -19,7 +21,7 @@ url_formats = [
 ]
 
 
-def runner():
+def scrape(tickers: List[str]):
     market_caps = []
     headrooms = []
     revenues = []
@@ -29,7 +31,7 @@ def runner():
     exceptions = []
     for ticker in tickers:
         print(f"Working on ticker: {ticker}")
-        for url_format in url_formats:
+        for url_format in URL_FORMATS:
             try:
                 url = url_format.replace("{ticker}", ticker)
                 scrape_data(
@@ -71,6 +73,6 @@ def runner():
 
 
 if __name__ == "__main__":
-    result_df = runner()
+    result_df = scrape(tickers)
     result_df.to_csv("results.csv", index=False)
     print(result_df)

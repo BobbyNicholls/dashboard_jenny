@@ -13,7 +13,9 @@ def get_market_cap_in_billions(soup_text: str) -> float:
         try:
             return float(soup_sub_text[: soup_sub_text.index("T USD")]) * 1000
         except:
-            raise ValueError("market cap is not in billions or trillions for asset provided???")
+            raise ValueError(
+                "market cap is not in billions or trillions for asset provided???"
+            )
 
 
 def get_52wk_high(soup_text: str) -> float:
@@ -21,5 +23,6 @@ def get_52wk_high(soup_text: str) -> float:
         "en the high and low prices over the past 52 weeks"
     )
     soup_sub_text = soup_text[soup_index + 50 :]
-    return float(soup_sub_text[soup_sub_text.index("- $")+3:soup_sub_text.index("Market")])
-
+    return float(
+        soup_sub_text[soup_sub_text.index("- $") + 3 : soup_sub_text.index("Market")]
+    )
