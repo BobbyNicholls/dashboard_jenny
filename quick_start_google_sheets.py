@@ -9,6 +9,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import gspread
 import pandas as pd
+
 # If modifying these scopes, delete the file token.json.
 SCOPES = [
     "https://www.googleapis.com/auth/drive",
@@ -23,7 +24,7 @@ SAMPLE_RANGE_NAME = "Class Data!A2:E"
 # import df2gspread as d2g
 
 
-credentials = Credentials.from_authorized_user_file('token.json', SCOPES)
+credentials = Credentials.from_authorized_user_file("token.json", SCOPES)
 
 gc = gspread.authorize(credentials)
 spreadsheet_key = "1nYYIkdzyH55uP6nAbRbkBJe5sWZPwJc6Z2GJ4O_j2sc"
@@ -34,7 +35,9 @@ worksheet = sheet.worksheet("API Test")
 financials_worksheet = sheet.worksheet("Financials")
 financials_df = pd.DataFrame(financials_worksheet.get_all_records())
 # worksheet.clear() clears all cells, use this to update a spreadsheet anew with the old one appended from before
-worksheet.update([financials_df.columns.values.tolist()] + financials_df.values.tolist())
+worksheet.update(
+    [financials_df.columns.values.tolist()] + financials_df.values.tolist()
+)
 
 
 def main():
