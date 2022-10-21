@@ -10,12 +10,16 @@ def label_point(x, y, val, ax):
 
 
 def plot_results(result_df: pd.DataFrame):
-    fig2, (ax2, ax3) = plt.subplots(nrows=1, ncols=2)
+    fig, (ax2, ax3) = plt.subplots(nrows=1, ncols=2)
+    fig.set_size_inches(18.5, 7.5)
     x = np.array(result_df["net_profit_margin"])
     y = np.array(result_df["market_cap_over_revenue"])
     ax2.scatter(x, y)
     label_point(
-        result_df["net_profit_margin"], result_df["market_cap_over_revenue"], result_df["ticker"], ax2
+        result_df["net_profit_margin"],
+        result_df["market_cap_over_revenue"],
+        result_df["ticker"],
+        ax2,
     )
     coefficient, constant = np.polyfit(x, y, 1)
     ax2.plot(x, coefficient * x + constant)
@@ -35,6 +39,8 @@ def plot_results(result_df: pd.DataFrame):
     ax3.set_xlabel("Headroom percent to 52 week high")
     ax3.set_ylabel("Net income YoY growth")
     ax3.plot()
+    fig.savefig(f"plots/plot {str(pd.to_datetime('today'))[:19].replace(':','-')}.png")
+    plt.close(fig)
 
 
 def plot_performance_metrics(result_df: pd.DataFrame):
@@ -45,6 +51,9 @@ def plot_performance_metrics(result_df: pd.DataFrame):
     ax.set_ylabel("Relative growth performance vs cohort")
     ax.scatter(x, y)
     label_point(
-        result_df["mkt_cap_differential"], result_df["relative_growth_performance"], result_df["ticker"], ax
+        result_df["mkt_cap_differential"],
+        result_df["relative_growth_performance"],
+        result_df["ticker"],
+        ax,
     )
     ax.plot()

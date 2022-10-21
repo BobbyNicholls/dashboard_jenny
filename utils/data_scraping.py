@@ -48,3 +48,10 @@ def get_sp500_stocks_by_sector(sector: str) -> List[str]:
     sector_df = dfs[0]
     print(sector_df.groupby("GICS Sector").count()["CIK"].rename("Count by sector"))
     return list(sector_df[sector_df["GICS Sector"] == sector]["Symbol"])
+
+
+def get_sp500_stocks() -> pd.DataFrame:
+    sp500_url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+    html_data = urllib.urlopen(sp500_url).read()
+    dfs = pd.read_html(html_data)
+    return dfs[0]
