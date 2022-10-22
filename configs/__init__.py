@@ -82,7 +82,20 @@ sp500_biggest_tech_tickers = [
     "CRM",
     "CRSR",
 ]
-ad_hoc_tickers = ["DIS", "NFLX"]
+ad_hoc_tickers = [
+    "CRSR",
+    "NFLX",
+    "PFE",
+    "BLK",
+    "FLGT",
+    "AMZN",
+    "ING",
+    "MOS",
+    "MSFT",
+    "BBY",
+    "GOOGL",
+    ""
+]
 # sp500_energy_tickers = get_sp500_stocks_by_sector("Energy")
 # sp500_health_care_tickers = get_sp500_stocks_by_sector("Health Care")
 # sp500_real_estate_tickers = get_sp500_stocks_by_sector("Real Estate")
