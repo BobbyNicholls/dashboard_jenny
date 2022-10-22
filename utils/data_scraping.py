@@ -18,11 +18,11 @@ from utils.text_searching import (
 
 def scrape_data(
     url: str,
-    market_caps,
-    headrooms,
-    revenues,
-    net_profit_margins,
-    net_income_yoy_growths,
+    market_caps: List[float],
+    headrooms: List[float],
+    revenues: List[float],
+    net_profit_margins: List[float],
+    net_income_yoy_growths: List[float],
 ):
     html_data = urllib.urlopen(url).read()
     dfs = pd.read_html(html_data)
