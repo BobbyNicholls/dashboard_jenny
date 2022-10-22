@@ -12,24 +12,24 @@ def label_point(x, y, val, ax):
 def plot_results(result_df: pd.DataFrame):
     fig, (ax2, ax3) = plt.subplots(nrows=1, ncols=2)
     fig.set_size_inches(18.5, 7.5)
-    x = np.array(result_df["net_profit_margin"])
-    y = np.array(result_df["market_cap_over_revenue"])
-    ax2.scatter(x, y)
+    net_profit_margin = np.array(result_df["net_profit_margin"])
+    market_cap_over_revenue = np.array(result_df["market_cap_over_revenue"])
+    ax2.scatter(net_profit_margin, market_cap_over_revenue)
     label_point(
         result_df["net_profit_margin"],
         result_df["market_cap_over_revenue"],
         result_df["ticker"],
         ax2,
     )
-    coefficient, constant = np.polyfit(x, y, 1)
-    ax2.plot(x, coefficient * x + constant)
+    coefficient, constant = np.polyfit(net_profit_margin, market_cap_over_revenue, 1)
+    ax2.plot(net_profit_margin, coefficient * net_profit_margin + constant)
     ax2.set_xlabel("Profit Margin")
     ax2.set_ylabel("Market cap / revenue")
     ax2.plot()
 
-    x = np.array(result_df["headroom_to_52wk"])
-    y = np.array(result_df["net_income_yoy_growth"])
-    ax3.scatter(x, y)
+    net_profit_margin = np.array(result_df["headroom_to_52wk"])
+    market_cap_over_revenue = np.array(result_df["net_income_yoy_growth"])
+    ax3.scatter(net_profit_margin, market_cap_over_revenue)
     label_point(
         result_df["headroom_to_52wk"],
         result_df["net_income_yoy_growth"],
