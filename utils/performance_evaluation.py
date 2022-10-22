@@ -4,13 +4,13 @@ import pandas as pd
 
 def get_performance_metrics(result_df: pd.DataFrame) -> pd.DataFrame:
     result_df = result_df.copy()
-    coeficient, constant = np.polyfit(
+    coefficient, constant = np.polyfit(
         np.array(result_df["net_profit_margin"]),
         np.array(result_df["market_cap_over_revenue"]),
         1,
     )
     result_df["predicted_mkt_cap_over_rev"] = (
-        coeficient * result_df["net_profit_margin"] + constant
+        coefficient * result_df["net_profit_margin"] + constant
     )
     result_df["mkt_cap_differential"] = (
         result_df["market_cap_over_revenue"] - result_df["predicted_mkt_cap_over_rev"]
