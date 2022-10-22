@@ -1,3 +1,4 @@
+# TODO: add appropriate error handling to this so we dont end up with impossible to track errors
 def get_last_close_price(soup_text: str) -> float:
     soup_index = soup_text.index("The last closing price")
     soup_sub_text = soup_text[soup_index + 23 :]
