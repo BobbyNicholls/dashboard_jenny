@@ -18,5 +18,5 @@ def get_performance_metrics(result_df: pd.DataFrame) -> pd.DataFrame:
     result_df["relative_growth_performance"] = (
         result_df["net_income_yoy_growth"] - result_df["net_income_yoy_growth"].mean()
     )
-    result_df = result_df.sort_values("relative_growth_performance", ascending=False)
+    result_df = result_df.sort_values("mkt_cap_differential")
     return result_df
