@@ -19,7 +19,7 @@ def runner():
     sp500_stocks_df = get_sp500_stocks()
     todays_date = str(pd.to_datetime("today").date())
     for worksheet_name in sp500_stocks_df["GICS Sector"].unique():
-        print("====================\nReviewing Sector: {}\n====================\n")
+        print(f"\n====================\nReviewing Sector: {worksheet_name}\n====================\n")
         worksheet = sheet.worksheet(worksheet_name)
         current_df = pd.DataFrame(worksheet.get_all_records())
         tickers = list(

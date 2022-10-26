@@ -8,7 +8,7 @@ from typing import List
 
 import pandas as pd
 
-from configs import sp500_IT_tickers as tickers
+from configs import ad_hoc_tickers as tickers
 from utils.data_scraping import scrape_data
 from utils.performance_evaluation import get_performance_metrics
 from utils.plotting import plot_results, plot_performance_metrics
